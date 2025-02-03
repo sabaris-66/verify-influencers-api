@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Influencer {
+  id             Int    @id
+  name           String
+  category       String
+  trustScore     Float
+  followersCount Int
+  verifiedClaims Int
+  posts          Post[] // One-to-many relationship with Post
+}
+
+model Post {
+  id           Int        @id @default(autoincrement())
+  content      String
+  status       String // e.g., "published", "draft", "archived"
+  trustScore   Float
+  influencerId Int
+  influencer   Influencer @relation(fields: [influencerId], references: [id]) // Many-to-one relationship with Influencer
+}
